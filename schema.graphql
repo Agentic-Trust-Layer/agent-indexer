@@ -38,3 +38,40 @@ type UriUpdate @entity(immutable: true) {
   blockNumber: BigInt!
   timestamp: BigInt!
 }
+
+type RepFeedback @entity(immutable: true) {
+  id: ID!                 # txHash-logIndex
+  agentId: BigInt!
+  clientAddress: Bytes!
+  score: Int!
+  tag1: Bytes!
+  tag2: Bytes!
+  feedbackUri: String
+  feedbackHash: Bytes!
+  txHash: Bytes!
+  blockNumber: BigInt!
+  timestamp: BigInt!
+}
+
+type RepFeedbackRevoked @entity(immutable: true) {
+  id: ID!                 # txHash-logIndex
+  agentId: BigInt!
+  clientAddress: Bytes!
+  feedbackIndex: BigInt!
+  txHash: Bytes!
+  blockNumber: BigInt!
+  timestamp: BigInt!
+}
+
+type RepResponseAppended @entity(immutable: true) {
+  id: ID!                 # txHash-logIndex
+  agentId: BigInt!
+  clientAddress: Bytes!
+  feedbackIndex: BigInt!
+  responder: Bytes!
+  responseUri: String
+  responseHash: Bytes!
+  txHash: Bytes!
+  blockNumber: BigInt!
+  timestamp: BigInt!
+}

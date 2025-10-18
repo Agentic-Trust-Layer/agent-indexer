@@ -3,6 +3,10 @@
     "ERC721": {
       "address": "0x8004a6090Cd10A7288092483047B097295Fb8847",
       "startBlock": 9419801
+    },
+    "ReputationRegistry": {
+      "address": "0x8004B8FD1A363aa02fDC07635C0c5F94f6Af5B7E",
+      "startBlock": 0
     }
   }
 }

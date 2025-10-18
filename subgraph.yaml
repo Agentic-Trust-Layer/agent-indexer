@@ -34,3 +34,29 @@ dataSources:
         - event: UriUpdated(indexed uint256,string,indexed address)
           handler: handleUriUpdated
       file: ./src/erc-721.ts
+  - kind: ethereum
+    name: ReputationRegistry
+    network: sepolia
+    source:
+      address: "0x8004B8FD1A363aa02fDC07635C0c5F94f6Af5B7E"
+      abi: ReputationRegistry
+      startBlock: 9419801
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.9
+      language: wasm/assemblyscript
+      entities:
+        - RepFeedback
+        - RepFeedbackRevoked
+        - RepResponseAppended
+      abis:
+        - name: ReputationRegistry
+          file: ./abis/ReputationRegistry.json
+      eventHandlers:
+        - event: NewFeedback(indexed uint256,indexed address,uint8,indexed bytes32,bytes32,string,bytes32)
+          handler: handleNewFeedback
+        - event: FeedbackRevoked(indexed uint256,indexed address,indexed uint64)
+          handler: handleFeedbackRevoked
+        - event: ResponseAppended(indexed uint256,indexed address,uint64,indexed address,string,bytes32)
+          handler: handleResponseAppended
+      file: ./src/reputation-registry.ts
