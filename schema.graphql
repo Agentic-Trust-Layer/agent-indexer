@@ -11,6 +11,13 @@ type Token @entity(immutable: false) {
   owner: Account!
   mintedAt: BigInt!
   uri: String
+  metadataJson: String
+  agentName: String
+  a2aEndpoint: String
+  ensName: String
+  agentAccount: String
+  description: String
+  image: String
 }
 
 type Account @entity(immutable: false) {
@@ -33,6 +40,7 @@ type UriUpdate @entity(immutable: true) {
   id: ID!                 # txHash-logIndex
   token: Token!
   newUri: String
+  newUriJson: String
   updatedBy: Bytes!
   txHash: Bytes!
   blockNumber: BigInt!
@@ -47,6 +55,12 @@ type RepFeedback @entity(immutable: true) {
   tag1: Bytes!
   tag2: Bytes!
   feedbackUri: String
+  feedbackJson: String
+  feedbackType: String
+  domain: String
+  comment: String
+  ratingPct: Int
+  feedbackTimestamp: String
   feedbackHash: Bytes!
   txHash: Bytes!
   blockNumber: BigInt!
@@ -70,6 +84,7 @@ type RepResponseAppended @entity(immutable: true) {
   feedbackIndex: BigInt!
   responder: Bytes!
   responseUri: String
+  responseJson: String
   responseHash: Bytes!
   txHash: Bytes!
   blockNumber: BigInt!
