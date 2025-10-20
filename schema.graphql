@@ -14,6 +14,7 @@ type Token @entity(immutable: false) {
   metadataJson: String
   agentName: String
   a2aEndpoint: String
+  chatEndpoint: String
   ensName: String
   agentAccount: String
   description: String

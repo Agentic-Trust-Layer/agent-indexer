@@ -1,4 +1,4 @@
-import { BigInt, Bytes, json, JSONValueKind, Bytes as GraphBytes, ipfs } from "@graphprotocol/graph-ts";
+import { BigInt, Bytes, json, JSONValueKind, Bytes as GraphBytes, ipfs, Value } from "@graphprotocol/graph-ts";
 function extractIpfsPath(uri: string): string | null {
   if (uri.startsWith("ipfs://")) return uri.replace("ipfs://", "");
   const ipfsIdx = uri.indexOf("/ipfs/");
@@ -135,6 +135,7 @@ export function handleUriUpdated(e: UriUpdatedEvent): void {
                 if (n == "A2A") token.a2aEndpoint = ep;
                 else if (n == "ENS") token.ensName = ep;
                 else if (n == "agentAccount") token.agentAccount = ep;
+                else if (n == "chat") token.set("chatEndpoint", Value.fromString(ep));
               }
             }
           }
