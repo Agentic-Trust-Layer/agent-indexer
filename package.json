@@ -4,7 +4,10 @@
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
+    "codegen:base": "graph codegen subgraph.base-sepolia.yaml",
+    "build:base": "graph build subgraph.base-sepolia.yaml",
     "deploy": "graph deploy --node https://api.studio.thegraph.com/deploy/ agentic-trust-layer",
+    "deploy:base:p2p": "graph deploy --node https://api.graph-ams.p2pify.com/3fee37a41850472fa3e9ea674598e6b9/deploy --ipfs https://api.graph-ams.p2pify.com/3fee37a41850472fa3e9ea674598e6b9/ipfs agentic-trust-layer-base subgraph.base-sepolia.yaml",
     "create-local": "graph create --node http://localhost:8020/ agentic-trust-layer",
     "remove-local": "graph remove --node http://localhost:8020/ agentic-trust-layer",
     "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 agentic-trust-layer",

@@ -6,6 +6,16 @@
     },
     "ReputationRegistry": {
       "address": "0x8004B8FD1A363aa02fDC07635C0c5F94f6Af5B7E",
+      "startBlock": 9419801
+    }
+  },
+  "base-sepolia": {
+    "ERC721": {
+      "address": "0x8004AA63c570c570eBF15376c0dB199918BFe9Fb",
+      "startBlock": 0
+    },
+    "ReputationRegistry": {
+      "address": "0x8004bd8daB57f14Ed299135749a5CB5c42d341BF",
       "startBlock": 0
     }
   }
