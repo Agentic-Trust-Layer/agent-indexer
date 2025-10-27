@@ -37,3 +37,13 @@ type Transfer @entity(immutable: true) {
   timestamp: BigInt!
 }
 
+type UriUpdate @entity(immutable: true) {
+  id: ID!                 # txHash-logIndex
+  token: Token!
+  newUri: String
+  newUriJson: String
+  updatedBy: Bytes!
+  txHash: Bytes!
+  blockNumber: BigInt!
+  timestamp: BigInt!
+}
