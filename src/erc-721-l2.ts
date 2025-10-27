@@ -1,6 +1,13 @@
-import { BigInt, Bytes, log } from "@graphprotocol/graph-ts";
-import { Transfer as TransferEvent, ERC721 } from "../generated/ERC721/ERC721";
-import { Account, Collection, Token, Transfer } from "../generated/schema";
+import { BigInt, Bytes, json, JSONValueKind, Bytes as GraphBytes, ipfs, Value } from "@graphprotocol/graph-ts";
+
+import {
+  Transfer as TransferEvent,
+  Approval as ApprovalEvent,
+  ApprovalForAll as ApprovalForAllEvent,
+  UriUpdated as UriUpdatedEvent,
+  
+} from "../generatedL2/ERC721/ERC721";
+import { Account, Collection, Token, Transfer } from "../generatedL2/schema";
 
 function getOrCreateAccount(addr: Bytes): Account {
   let a = Account.load(addr);
@@ -13,8 +20,6 @@ function getOrCreateCollection(addr: Bytes): Collection {
   if (c == null) {
     c = new Collection(addr);
     c.totalSupply = BigInt.zero();
-    // Optional: bind contract to read name/symbol once. Avoid repeated eth_calls in handlers.
-    // const contract = ERC721.bind(addr as Address); // use sparingly for performance
   }
   return c as Collection;
 }
@@ -31,13 +36,8 @@ export function handleTransfer(e: TransferEvent): void {
     token = new Token(tokenId);
     token.collection = col.id;
     token.mintedAt = e.block.timestamp;
-    // Optional: read tokenURI once; cache it, avoid per-transfer calls
-    // const contract = ERC721.bind(e.address);
-    // let uri = contract.try_tokenURI(e.params.tokenId);
-    // if (!uri.reverted) token.uri = uri.value;
   }
 
-  // naive balances (fine for most UIs)
   if (from.id != to.id) {
     from.balance = from.balance.minus(BigInt.fromI32(1));
     to.balance = to.balance.plus(BigInt.fromI32(1));
@@ -56,3 +56,11 @@ export function handleTransfer(e: TransferEvent): void {
 
   from.save(); to.save(); (token as Token).save(); (col as Collection).save(); t.save();
 }
+
+export function handleApproval(_e: ApprovalEvent): void {}
+
+export function handleApprovalForAll(_e: ApprovalForAllEvent): void {}
+
+
+
+

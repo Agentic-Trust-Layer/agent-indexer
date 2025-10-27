@@ -1,0 +1,39 @@
+type Collection @entity(immutable: false) {
+  id: Bytes!              # contract address
+  name: String
+  symbol: String
+  totalSupply: BigInt!
+}
+
+type Token @entity(immutable: false) {
+  id: ID!                 # tokenId as string
+  collection: Collection!
+  owner: Account!
+  mintedAt: BigInt!
+  uri: String
+  metadataJson: String
+  agentName: String
+  a2aEndpoint: String
+  chatEndpoint: String
+  ensName: String
+  agentAccount: String
+  description: String
+  image: String
+}
+
+type Account @entity(immutable: false) {
+  id: Bytes!              # owner address
+  balance: BigInt!
+  tokens: [Token!] @derivedFrom(field: "owner")
+}
+
+type Transfer @entity(immutable: true) {
+  id: ID!                 # txHash-logIndex
+  token: Token!
+  from: Account!
+  to: Account!
+  txHash: Bytes!
+  blockNumber: BigInt!
+  timestamp: BigInt!
+}
+
