@@ -46,7 +46,7 @@ function getOrCreateCollection(addr: Bytes): Collection {
 
 export function handleTransfer(e: TransferEvent): void {
   const col = getOrCreateCollection(e.address);
-  const tokenId = e.params.tokenId.toString();
+  const tokenId = e.params.tokenId.toI64();
 
   let token = Token.load(tokenId);
   let from = getOrCreateAccount(e.params.from);
@@ -82,7 +82,7 @@ export function handleApproval(_e: ApprovalEvent): void {}
 export function handleApprovalForAll(_e: ApprovalForAllEvent): void {}
 
 export function handleUriUpdated(e: UriUpdatedEvent): void {
-  const tokenId = e.params.agentId.toString();
+  const tokenId = e.params.agentId.toI64();
   const id = e.transaction.hash.toHex() + "-" + e.logIndex.toString();
   const u = new UriUpdate(id);
   u.token = tokenId;

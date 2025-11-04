@@ -104,9 +104,9 @@ export class Collection extends Entity {
 }
 
 export class Token extends Entity {
-  constructor(id: string) {
+  constructor(id: Int8) {
     super();
-    this.set("id", Value.fromString(id));
+    this.set("id", Value.fromI64(id));
   }
 
   save(): void {
@@ -114,32 +114,32 @@ export class Token extends Entity {
     assert(id != null, "Cannot save Token entity without an ID");
     if (id) {
       assert(
-        id.kind == ValueKind.STRING,
-        `Entities of type Token must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
+        id.kind == ValueKind.INT8,
+        `Entities of type Token must have an ID of type Int8 but the id '${id.displayData()}' is of type ${id.displayKind()}`,
       );
-      store.set("Token", id.toString(), this);
+      store.set("Token", id.toI64().toString(), this);
     }
   }
 
-  static loadInBlock(id: string): Token | null {
-    return changetype<Token | null>(store.get_in_block("Token", id));
+  static loadInBlock(id: Int8): Token | null {
+    return changetype<Token | null>(store.get_in_block("Token", id.toString()));
   }
 
-  static load(id: string): Token | null {
-    return changetype<Token | null>(store.get("Token", id));
+  static load(id: Int8): Token | null {
+    return changetype<Token | null>(store.get("Token", id.toString()));
   }
 
-  get id(): string {
+  get id(): i64 {
     let value = this.get("id");
     if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
+      return 0;
     } else {
-      return value.toString();
+      return value.toI64();
     }
   }
 
-  set id(value: string) {
-    this.set("id", Value.fromString(value));
+  set id(value: i64) {
+    this.set("id", Value.fromI64(value));
   }
 
   get collection(): Bytes {
@@ -437,17 +437,17 @@ export class Transfer extends Entity {
     this.set("id", Value.fromString(value));
   }
 
-  get token(): string {
+  get token(): i64 {
     let value = this.get("token");
     if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
+      return 0;
     } else {
-      return value.toString();
+      return value.toI64();
     }
   }
 
-  set token(value: string) {
-    this.set("token", Value.fromString(value));
+  set token(value: i64) {
+    this.set("token", Value.fromI64(value));
   }
 
   get from(): Bytes {
@@ -555,17 +555,17 @@ export class UriUpdate extends Entity {
     this.set("id", Value.fromString(value));
   }
 
-  get token(): string {
+  get token(): i64 {
     let value = this.get("token");
     if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
+      return 0;
     } else {
-      return value.toString();
+      return value.toI64();
     }
   }
 
-  set token(value: string) {
-    this.set("token", Value.fromString(value));
+  set token(value: i64) {
+    this.set("token", Value.fromI64(value));
   }
 
   get newUri(): string | null {

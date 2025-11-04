@@ -6,7 +6,7 @@ type Collection @entity(immutable: false) {
 }
 
 type Token @entity(immutable: false) {
-  id: ID!                 # tokenId as string
+  id: Int8!               # tokenId as integer
   collection: Collection!
   owner: Account!
   mintedAt: BigInt!
