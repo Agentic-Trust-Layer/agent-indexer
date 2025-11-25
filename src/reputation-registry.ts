@@ -1,4 +1,4 @@
-import { BigInt, ipfs, Value, json } from "@graphprotocol/graph-ts";
+import { BigInt, ipfs, Value, json, JSONValueKind } from "@graphprotocol/graph-ts";
 import {
   NewFeedback as NewFeedbackEvent,
   FeedbackRevoked as FeedbackRevokedEvent,
@@ -54,15 +54,15 @@ export function handleNewFeedback(e: NewFeedbackEvent): void {
       if (!parsed.isError) {
         const obj = parsed.value.toObject();
         const t = obj.get("type");
-        if (t && !t.isNull()) entity.set("feedbackType", Value.fromString(t.toString()));
+        if (t && !t.isNull() && t.kind == JSONValueKind.STRING) entity.set("feedbackType", Value.fromString(t.toString()));
         const d = obj.get("domain");
-        if (d && !d.isNull()) entity.set("domain", Value.fromString(d.toString()));
+        if (d && !d.isNull() && d.kind == JSONValueKind.STRING) entity.set("domain", Value.fromString(d.toString()));
         const c = obj.get("comment");
-        if (c && !c.isNull()) entity.set("comment", Value.fromString(c.toString()));
+        if (c && !c.isNull() && c.kind == JSONValueKind.STRING) entity.set("comment", Value.fromString(c.toString()));
         const ts = obj.get("timestamp");
-        if (ts && !ts.isNull()) entity.set("feedbackTimestamp", Value.fromString(ts.toString()));
+        if (ts && !ts.isNull() && ts.kind == JSONValueKind.STRING) entity.set("feedbackTimestamp", Value.fromString(ts.toString()));
         const rp = obj.get("ratingPct");
-        if (rp && !rp.isNull()) entity.set("ratingPct", Value.fromI32(rp.toI64() as i32));
+        if (rp && !rp.isNull() && rp.kind == JSONValueKind.NUMBER) entity.set("ratingPct", Value.fromI32(rp.toI64() as i32));
       }
     }
   }

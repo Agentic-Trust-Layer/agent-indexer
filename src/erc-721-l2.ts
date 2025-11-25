@@ -118,11 +118,11 @@ export function handleUriUpdated(e: UriUpdatedEvent): void {
         if (!obj.isError) {
           const value = obj.value.toObject();
           const nameVal = value.get("name");
-          if (nameVal && !nameVal.isNull()) token.agentName = nameVal.toString();
+          if (nameVal && !nameVal.isNull() && nameVal.kind == JSONValueKind.STRING) token.agentName = nameVal.toString();
           const descVal = value.get("description");
-          if (descVal && !descVal.isNull()) token.description = descVal.toString();
+          if (descVal && !descVal.isNull() && descVal.kind == JSONValueKind.STRING) token.description = descVal.toString();
           const imageVal = value.get("image");
-          if (imageVal && !imageVal.isNull()) token.image = imageVal.toString();
+          if (imageVal && !imageVal.isNull() && imageVal.kind == JSONValueKind.STRING) token.image = imageVal.toString();
           const endpointsVal = value.get("endpoints");
           if (endpointsVal && endpointsVal.kind == JSONValueKind.ARRAY) {
             const arr = endpointsVal.toArray();
@@ -130,7 +130,7 @@ export function handleUriUpdated(e: UriUpdatedEvent): void {
               const item = arr[i].toObject();
               const name = item.get("name");
               const endpoint = item.get("endpoint");
-              if (name && endpoint) {
+              if (name && endpoint && name.kind == JSONValueKind.STRING && endpoint.kind == JSONValueKind.STRING) {
                 const n = name.toString();
                 const ep = endpoint.toString();
                 if (n == "A2A") token.a2aEndpoint = ep;

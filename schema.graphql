@@ -91,3 +91,30 @@ type RepResponseAppended @entity(immutable: true) {
   blockNumber: BigInt!
   timestamp: BigInt!
 }
+
+type ValidationRequest @entity(immutable: true) {
+  id: ID!                 # txHash-logIndex
+  validatorAddress: Bytes!
+  agentId: BigInt!
+  requestUri: String
+  requestJson: String
+  requestHash: Bytes!
+  txHash: Bytes!
+  blockNumber: BigInt!
+  timestamp: BigInt!
+}
+
+type ValidationResponse @entity(immutable: true) {
+  id: ID!                 # txHash-logIndex
+  validatorAddress: Bytes!
+  agentId: BigInt!
+  requestHash: Bytes!
+  response: Int!
+  responseUri: String
+  responseJson: String
+  responseHash: Bytes!
+  tag: Bytes!
+  txHash: Bytes!
+  blockNumber: BigInt!
+  timestamp: BigInt!
+}
