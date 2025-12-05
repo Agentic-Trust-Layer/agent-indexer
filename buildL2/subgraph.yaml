@@ -22,6 +22,7 @@ dataSources:
         - Token
         - Account
         - Transfer
+        - TokenMetadata
       abis:
         - name: ERC721
           file: ERC721/ERC721.json
@@ -32,6 +33,8 @@ dataSources:
           handler: handleApproval
         - event: ApprovalForAll(indexed address,indexed address,bool)
           handler: handleApprovalForAll
+        - event: MetadataSet(indexed uint256,indexed string,string,bytes)
+          handler: handleMetadataSet
       file: ERC721/ERC721.wasm
   - kind: ethereum
     name: ValidationRegistry

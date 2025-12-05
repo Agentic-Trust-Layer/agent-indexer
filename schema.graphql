@@ -48,6 +48,19 @@ type UriUpdate @entity(immutable: true) {
   timestamp: BigInt!
 }
 
+type TokenMetadata @entity(immutable: false) {
+  id: ID!                 # tokenId-key combination
+  token: Token!
+  key: String!
+  value: Bytes!
+  indexedKey: String
+  setAt: BigInt!
+  setBy: Bytes!
+  txHash: Bytes!
+  blockNumber: BigInt!
+  timestamp: BigInt!
+}
+
 type RepFeedback @entity(immutable: true) {
   id: ID!                 # txHash-logIndex
   agentId: BigInt!
