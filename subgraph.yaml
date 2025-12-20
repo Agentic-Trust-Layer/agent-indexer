@@ -88,3 +88,27 @@ dataSources:
         - event: ValidationResponse(indexed address,indexed uint256,indexed bytes32,uint8,string,bytes32,bytes32)
           handler: handleValidationResponse
       file: ./src/validation-registry.ts
+  - kind: ethereum
+    name: AssociationsStore
+    network: sepolia
+    source:
+      address: "0xe6Aa291353A8Aa7Ee9cfe89787981CcF4F47Fc3f"
+      abi: AssociationsStore
+      startBlock: 0
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.9
+      language: wasm/assemblyscript
+      entities:
+        - Association
+        - AssociationAccount
+        - AssociationRevocation
+      abis:
+        - name: AssociationsStore
+          file: ./abis/AssociationsStore.json
+      callHandlers:
+        - function: storeAssociation((uint40,bytes2,bytes2,bytes,bytes,(bytes,bytes,uint40,uint40,bytes4,bytes)))
+          handler: handleStoreAssociation
+        - function: revokeAssociation(bytes32,uint40)
+          handler: handleRevokeAssociation
+      file: ./src/associations-store.ts

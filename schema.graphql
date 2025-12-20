@@ -131,3 +131,50 @@ type ValidationResponse @entity(immutable: true) {
   blockNumber: BigInt!
   timestamp: BigInt!
 }
+
+# ----------------------------
+# ERC-8092 Associations Store
+# ----------------------------
+
+type AssociationAccount @entity(immutable: false) {
+  id: Bytes! # raw account bytes (may be address-like, but not necessarily 20 bytes)
+  initiated: [Association!] @derivedFrom(field: "initiatorAccount")
+  approved: [Association!] @derivedFrom(field: "approverAccount")
+}
+
+type Association @entity(immutable: false) {
+  id: Bytes! # associationId (bytes32)
+
+  initiatorAccount: AssociationAccount!
+  approverAccount: AssociationAccount!
+
+  initiator: Bytes!
+  approver: Bytes!
+  validAt: BigInt!
+  validUntil: BigInt!
+  interfaceId: Bytes!
+  data: Bytes!
+
+  initiatorKeyType: Bytes!
+  approverKeyType: Bytes!
+  initiatorSignature: Bytes!
+  approverSignature: Bytes!
+
+  revokedAt: BigInt
+
+  createdTxHash: Bytes!
+  createdBlockNumber: BigInt!
+  createdTimestamp: BigInt!
+  lastUpdatedTxHash: Bytes!
+  lastUpdatedBlockNumber: BigInt!
+  lastUpdatedTimestamp: BigInt!
+}
+
+type AssociationRevocation @entity(immutable: true) {
+  id: ID! # txHash-logIndex
+  associationId: Bytes!
+  revokedAt: BigInt!
+  txHash: Bytes!
+  blockNumber: BigInt!
+  timestamp: BigInt!
+}

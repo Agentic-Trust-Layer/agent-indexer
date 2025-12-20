@@ -1,0 +1,76 @@
+[
+  {
+    "type": "function",
+    "name": "storeAssociation",
+    "stateMutability": "nonpayable",
+    "inputs": [
+      {
+        "name": "sar",
+        "type": "tuple",
+        "components": [
+          { "name": "revokedAt", "type": "uint40" },
+          { "name": "initiatorKeyType", "type": "bytes2" },
+          { "name": "approverKeyType", "type": "bytes2" },
+          { "name": "initiatorSignature", "type": "bytes" },
+          { "name": "approverSignature", "type": "bytes" },
+          {
+            "name": "record",
+            "type": "tuple",
+            "components": [
+              { "name": "initiator", "type": "bytes" },
+              { "name": "approver", "type": "bytes" },
+              { "name": "validAt", "type": "uint40" },
+              { "name": "validUntil", "type": "uint40" },
+              { "name": "interfaceId", "type": "bytes4" },
+              { "name": "data", "type": "bytes" }
+            ]
+          }
+        ]
+      }
+    ],
+    "outputs": []
+  },
+  {
+    "type": "function",
+    "name": "revokeAssociation",
+    "stateMutability": "nonpayable",
+    "inputs": [
+      { "name": "associationId", "type": "bytes32" },
+      { "name": "revokedAt", "type": "uint40" }
+    ],
+    "outputs": []
+  },
+  {
+    "type": "function",
+    "name": "getAssociationsForAccount",
+    "stateMutability": "view",
+    "inputs": [{ "name": "account", "type": "bytes" }],
+    "outputs": [
+      {
+        "name": "sars",
+        "type": "tuple[]",
+        "components": [
+          { "name": "revokedAt", "type": "uint40" },
+          { "name": "initiatorKeyType", "type": "bytes2" },
+          { "name": "approverKeyType", "type": "bytes2" },
+          { "name": "initiatorSignature", "type": "bytes" },
+          { "name": "approverSignature", "type": "bytes" },
+          {
+            "name": "record",
+            "type": "tuple",
+            "components": [
+              { "name": "initiator", "type": "bytes" },
+              { "name": "approver", "type": "bytes" },
+              { "name": "validAt", "type": "uint40" },
+              { "name": "validUntil", "type": "uint40" },
+              { "name": "interfaceId", "type": "bytes4" },
+              { "name": "data", "type": "bytes" }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]
+
+
