@@ -19,20 +19,28 @@ dataSources:
       language: wasm/assemblyscript
       entities:
         - Collection
-        - Token
+        - Agent
         - Account
-        - Transfer
-        - TokenMetadata
+        - AgentTransfer
+        - AgentMetadata
+        - AgentURIUpdate
+        - AgentRegistrationFile
+        - AgentStats
+        - GlobalStats
       abis:
         - name: ERC721
           file: ./abis/ERC721.json
       eventHandlers:
+        - event: Registered(indexed uint256,string,indexed address)
+          handler: handleRegistered
         - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handleTransfer
         - event: Approval(indexed address,indexed address,indexed uint256)
           handler: handleApproval
         - event: ApprovalForAll(indexed address,indexed address,bool)
           handler: handleApprovalForAll
+        - event: URIUpdated(indexed uint256,string,indexed address)
+          handler: handleUriUpdated
         - event: MetadataSet(indexed uint256,indexed string,string,bytes)
           handler: handleMetadataSet
       file: ./src/erc-721-l2.ts
@@ -50,13 +58,16 @@ dataSources:
       entities:
         - ValidationRequest
         - ValidationResponse
+        - ValidationFile
+        - AgentStats
+        - GlobalStats
       abis:
         - name: ValidationRegistry
           file: ./abis/ValidationRegistry.json
       eventHandlers:
         - event: ValidationRequest(indexed address,indexed uint256,string,indexed bytes32)
           handler: handleValidationRequest
-        - event: ValidationResponse(indexed address,indexed uint256,indexed bytes32,uint8,string,bytes32,bytes32)
+        - event: ValidationResponse(indexed address,indexed uint256,indexed bytes32,uint8,string,bytes32,string)
           handler: handleValidationResponse
       file: ./src/validation-registry-l2.ts
 

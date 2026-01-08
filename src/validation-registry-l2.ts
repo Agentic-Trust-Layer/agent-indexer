@@ -5,8 +5,40 @@ import {
 } from "../generatedL2/ValidationRegistry/ValidationRegistry";
 import {
   ValidationRequest,
-  ValidationResponse
+  ValidationResponse,
+  ValidationFile,
+  AgentStats,
+  GlobalStats
 } from "../generatedL2/schema";
+
+function getOrCreateGlobalStats(ts: BigInt): GlobalStats {
+  let g = GlobalStats.load("global");
+  if (g == null) {
+    g = new GlobalStats("global");
+    g.totalAgents = BigInt.zero();
+    g.totalFeedback = BigInt.zero();
+    g.totalValidations = BigInt.zero();
+    g.tags = [];
+  }
+  g.updatedAt = ts;
+  return g as GlobalStats;
+}
+
+function getOrCreateAgentStats(agentId: BigInt, ts: BigInt): AgentStats {
+  const id = agentId.toString();
+  let s = AgentStats.load(id);
+  if (s == null) {
+    s = new AgentStats(id);
+    s.agent = id;
+    s.totalFeedback = BigInt.zero();
+    s.totalValidations = BigInt.zero();
+    s.tags = [];
+    s.lastActivity = ts;
+  }
+  s.updatedAt = ts;
+  s.lastActivity = ts;
+  return s as AgentStats;
+}
 
 function extractIpfsPath(uri: string): string | null {
   if (uri.startsWith("ipfs://")) return uri.replace("ipfs://", "");
@@ -34,20 +66,36 @@ export function handleValidationRequest(e: ValidationRequestEvent): void {
   const id = e.transaction.hash.toHex() + "-" + e.logIndex.toString();
   const entity = new ValidationRequest(id);
   entity.validatorAddress = e.params.validatorAddress;
-  entity.agentId = e.params.agentId;
-  entity.requestUri = e.params.requestUri;
+  entity.agent = e.params.agentId.toString();
+  entity.requestUri = e.params.requestURI;
   entity.requestHash = e.params.requestHash;
   entity.txHash = e.transaction.hash;
   entity.blockNumber = e.block.number;
   entity.timestamp = e.block.timestamp;
 
   // If IPFS (ipfs:// or gateway), store raw JSON as string
-  const ruri = e.params.requestUri;
-  const rpath = ruri != null ? extractIpfsPath(ruri) : null;
+  const ruri = e.params.requestURI;
+  const rpath = extractIpfsPath(ruri);
   if (rpath) {
     let data = ipfs.cat(rpath);
     if (data !== null) {
-      entity.set("requestJson", Value.fromString(data.toString()));
+      const raw = data.toString();
+      entity.set("requestJson", Value.fromString(raw));
+
+      const vid = e.transaction.hash.toHex() + ":" + rpath;
+      let vf = ValidationFile.load(vid);
+      if (vf == null) {
+        vf = new ValidationFile(vid);
+        vf.agent = e.params.agentId.toString();
+        vf.validatorAddress = e.params.validatorAddress;
+        vf.requestHash = e.params.requestHash;
+        vf.createdAt = e.block.timestamp;
+      }
+      vf.requestUri = ruri;
+      vf.cid = rpath;
+      vf.requestRaw = raw;
+      vf.save();
+      entity.file = vf.id;
     }
   }
 
@@ -58,10 +106,10 @@ export function handleValidationResponse(e: ValidationResponseEvent): void {
   const id = e.transaction.hash.toHex() + "-" + e.logIndex.toString();
   const entity = new ValidationResponse(id);
   entity.validatorAddress = e.params.validatorAddress;
-  entity.agentId = e.params.agentId;
+  entity.agent = e.params.agentId.toString();
   entity.requestHash = e.params.requestHash;
   entity.response = e.params.response;
-  entity.responseUri = e.params.responseUri;
+  entity.responseUri = e.params.responseURI;
   entity.responseHash = e.params.responseHash;
   entity.tag = e.params.tag;
   entity.txHash = e.transaction.hash;
@@ -69,14 +117,38 @@ export function handleValidationResponse(e: ValidationResponseEvent): void {
   entity.timestamp = e.block.timestamp;
 
   // If IPFS (ipfs:// or gateway), store raw JSON as string
-  const ruri = e.params.responseUri;
+  const ruri = e.params.responseURI;
   const rpath = ruri != null ? extractIpfsPath(ruri) : null;
   if (rpath) {
     let data = ipfs.cat(rpath);
     if (data !== null) {
-      entity.set("responseJson", Value.fromString(data.toString()));
+      const raw = data.toString();
+      entity.set("responseJson", Value.fromString(raw));
+
+      const vid = e.transaction.hash.toHex() + ":" + rpath;
+      let vf = ValidationFile.load(vid);
+      if (vf == null) {
+        vf = new ValidationFile(vid);
+        vf.agent = e.params.agentId.toString();
+        vf.validatorAddress = e.params.validatorAddress;
+        vf.requestHash = e.params.requestHash;
+        vf.createdAt = e.block.timestamp;
+      }
+      vf.responseUri = ruri;
+      vf.cid = rpath;
+      vf.responseRaw = raw;
+      vf.tag = e.params.tag;
+      vf.save();
+      entity.file = vf.id;
     }
   }
+
+  const stats = getOrCreateAgentStats(e.params.agentId, e.block.timestamp);
+  stats.totalValidations = stats.totalValidations.plus(BigInt.fromI32(1));
+  stats.save();
+  const g = getOrCreateGlobalStats(e.block.timestamp);
+  g.totalValidations = g.totalValidations.plus(BigInt.fromI32(1));
+  g.save();
 
   entity.save();
 }

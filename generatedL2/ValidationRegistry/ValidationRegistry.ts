@@ -10,6 +10,64 @@ import {
   BigInt,
 } from "@graphprotocol/graph-ts";
 
+export class Initialized extends ethereum.Event {
+  get params(): Initialized__Params {
+    return new Initialized__Params(this);
+  }
+}
+
+export class Initialized__Params {
+  _event: Initialized;
+
+  constructor(event: Initialized) {
+    this._event = event;
+  }
+
+  get version(): BigInt {
+    return this._event.parameters[0].value.toBigInt();
+  }
+}
+
+export class OwnershipTransferred extends ethereum.Event {
+  get params(): OwnershipTransferred__Params {
+    return new OwnershipTransferred__Params(this);
+  }
+}
+
+export class OwnershipTransferred__Params {
+  _event: OwnershipTransferred;
+
+  constructor(event: OwnershipTransferred) {
+    this._event = event;
+  }
+
+  get previousOwner(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+
+  get newOwner(): Address {
+    return this._event.parameters[1].value.toAddress();
+  }
+}
+
+export class Upgraded extends ethereum.Event {
+  get params(): Upgraded__Params {
+    return new Upgraded__Params(this);
+  }
+}
+
+export class Upgraded__Params {
+  _event: Upgraded;
+
+  constructor(event: Upgraded) {
+    this._event = event;
+  }
+
+  get implementation(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+}
+
 export class ValidationRequest extends ethereum.Event {
   get params(): ValidationRequest__Params {
     return new ValidationRequest__Params(this);
@@ -31,7 +89,7 @@ export class ValidationRequest__Params {
     return this._event.parameters[1].value.toBigInt();
   }
 
-  get requestUri(): string {
+  get requestURI(): string {
     return this._event.parameters[2].value.toString();
   }
 
@@ -69,7 +127,7 @@ export class ValidationResponse__Params {
     return this._event.parameters[3].value.toI32();
   }
 
-  get responseUri(): string {
+  get responseURI(): string {
     return this._event.parameters[4].value.toString();
   }
 
@@ -77,14 +135,151 @@ export class ValidationResponse__Params {
     return this._event.parameters[5].value.toBytes();
   }
 
-  get tag(): Bytes {
-    return this._event.parameters[6].value.toBytes();
+  get tag(): string {
+    return this._event.parameters[6].value.toString();
+  }
+}
+
+export class ValidationRegistry__getSummaryResult {
+  value0: BigInt;
+  value1: i32;
+
+  constructor(value0: BigInt, value1: i32) {
+    this.value0 = value0;
+    this.value1 = value1;
+  }
+
+  toMap(): TypedMap<string, ethereum.Value> {
+    let map = new TypedMap<string, ethereum.Value>();
+    map.set("value0", ethereum.Value.fromUnsignedBigInt(this.value0));
+    map.set(
+      "value1",
+      ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(this.value1)),
+    );
+    return map;
+  }
+
+  getCount(): BigInt {
+    return this.value0;
+  }
+
+  getAvgResponse(): i32 {
+    return this.value1;
+  }
+}
+
+export class ValidationRegistry__getValidationStatusResult {
+  value0: Address;
+  value1: BigInt;
+  value2: i32;
+  value3: Bytes;
+  value4: string;
+  value5: BigInt;
+
+  constructor(
+    value0: Address,
+    value1: BigInt,
+    value2: i32,
+    value3: Bytes,
+    value4: string,
+    value5: BigInt,
+  ) {
+    this.value0 = value0;
+    this.value1 = value1;
+    this.value2 = value2;
+    this.value3 = value3;
+    this.value4 = value4;
+    this.value5 = value5;
+  }
+
+  toMap(): TypedMap<string, ethereum.Value> {
+    let map = new TypedMap<string, ethereum.Value>();
+    map.set("value0", ethereum.Value.fromAddress(this.value0));
+    map.set("value1", ethereum.Value.fromUnsignedBigInt(this.value1));
+    map.set(
+      "value2",
+      ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(this.value2)),
+    );
+    map.set("value3", ethereum.Value.fromFixedBytes(this.value3));
+    map.set("value4", ethereum.Value.fromString(this.value4));
+    map.set("value5", ethereum.Value.fromUnsignedBigInt(this.value5));
+    return map;
+  }
+
+  getValidatorAddress(): Address {
+    return this.value0;
+  }
+
+  getAgentId(): BigInt {
+    return this.value1;
+  }
+
+  getResponse(): i32 {
+    return this.value2;
+  }
+
+  getResponseHash(): Bytes {
+    return this.value3;
+  }
+
+  getTag(): string {
+    return this.value4;
+  }
+
+  getLastUpdate(): BigInt {
+    return this.value5;
   }
 }
 
 export class ValidationRegistry extends ethereum.SmartContract {
   static bind(address: Address): ValidationRegistry {
     return new ValidationRegistry("ValidationRegistry", address);
+  }
+
+  UPGRADE_INTERFACE_VERSION(): string {
+    let result = super.call(
+      "UPGRADE_INTERFACE_VERSION",
+      "UPGRADE_INTERFACE_VERSION():(string)",
+      [],
+    );
+
+    return result[0].toString();
+  }
+
+  try_UPGRADE_INTERFACE_VERSION(): ethereum.CallResult<string> {
+    let result = super.tryCall(
+      "UPGRADE_INTERFACE_VERSION",
+      "UPGRADE_INTERFACE_VERSION():(string)",
+      [],
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toString());
+  }
+
+  getAgentValidations(agentId: BigInt): Array<Bytes> {
+    let result = super.call(
+      "getAgentValidations",
+      "getAgentValidations(uint256):(bytes32[])",
+      [ethereum.Value.fromUnsignedBigInt(agentId)],
+    );
+
+    return result[0].toBytesArray();
+  }
+
+  try_getAgentValidations(agentId: BigInt): ethereum.CallResult<Array<Bytes>> {
+    let result = super.tryCall(
+      "getAgentValidations",
+      "getAgentValidations(uint256):(bytes32[])",
+      [ethereum.Value.fromUnsignedBigInt(agentId)],
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBytesArray());
   }
 
   getIdentityRegistry(): Address {
@@ -108,6 +303,316 @@ export class ValidationRegistry extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
+  getSummary(
+    agentId: BigInt,
+    validatorAddresses: Array<Address>,
+    tag: string,
+  ): ValidationRegistry__getSummaryResult {
+    let result = super.call(
+      "getSummary",
+      "getSummary(uint256,address[],string):(uint64,uint8)",
+      [
+        ethereum.Value.fromUnsignedBigInt(agentId),
+        ethereum.Value.fromAddressArray(validatorAddresses),
+        ethereum.Value.fromString(tag),
+      ],
+    );
+
+    return new ValidationRegistry__getSummaryResult(
+      result[0].toBigInt(),
+      result[1].toI32(),
+    );
+  }
+
+  try_getSummary(
+    agentId: BigInt,
+    validatorAddresses: Array<Address>,
+    tag: string,
+  ): ethereum.CallResult<ValidationRegistry__getSummaryResult> {
+    let result = super.tryCall(
+      "getSummary",
+      "getSummary(uint256,address[],string):(uint64,uint8)",
+      [
+        ethereum.Value.fromUnsignedBigInt(agentId),
+        ethereum.Value.fromAddressArray(validatorAddresses),
+        ethereum.Value.fromString(tag),
+      ],
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(
+      new ValidationRegistry__getSummaryResult(
+        value[0].toBigInt(),
+        value[1].toI32(),
+      ),
+    );
+  }
+
+  getValidationStatus(
+    requestHash: Bytes,
+  ): ValidationRegistry__getValidationStatusResult {
+    let result = super.call(
+      "getValidationStatus",
+      "getValidationStatus(bytes32):(address,uint256,uint8,bytes32,string,uint256)",
+      [ethereum.Value.fromFixedBytes(requestHash)],
+    );
+
+    return new ValidationRegistry__getValidationStatusResult(
+      result[0].toAddress(),
+      result[1].toBigInt(),
+      result[2].toI32(),
+      result[3].toBytes(),
+      result[4].toString(),
+      result[5].toBigInt(),
+    );
+  }
+
+  try_getValidationStatus(
+    requestHash: Bytes,
+  ): ethereum.CallResult<ValidationRegistry__getValidationStatusResult> {
+    let result = super.tryCall(
+      "getValidationStatus",
+      "getValidationStatus(bytes32):(address,uint256,uint8,bytes32,string,uint256)",
+      [ethereum.Value.fromFixedBytes(requestHash)],
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(
+      new ValidationRegistry__getValidationStatusResult(
+        value[0].toAddress(),
+        value[1].toBigInt(),
+        value[2].toI32(),
+        value[3].toBytes(),
+        value[4].toString(),
+        value[5].toBigInt(),
+      ),
+    );
+  }
+
+  getValidatorRequests(validatorAddress: Address): Array<Bytes> {
+    let result = super.call(
+      "getValidatorRequests",
+      "getValidatorRequests(address):(bytes32[])",
+      [ethereum.Value.fromAddress(validatorAddress)],
+    );
+
+    return result[0].toBytesArray();
+  }
+
+  try_getValidatorRequests(
+    validatorAddress: Address,
+  ): ethereum.CallResult<Array<Bytes>> {
+    let result = super.tryCall(
+      "getValidatorRequests",
+      "getValidatorRequests(address):(bytes32[])",
+      [ethereum.Value.fromAddress(validatorAddress)],
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBytesArray());
+  }
+
+  getVersion(): string {
+    let result = super.call("getVersion", "getVersion():(string)", []);
+
+    return result[0].toString();
+  }
+
+  try_getVersion(): ethereum.CallResult<string> {
+    let result = super.tryCall("getVersion", "getVersion():(string)", []);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toString());
+  }
+
+  owner(): Address {
+    let result = super.call("owner", "owner():(address)", []);
+
+    return result[0].toAddress();
+  }
+
+  try_owner(): ethereum.CallResult<Address> {
+    let result = super.tryCall("owner", "owner():(address)", []);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
+  proxiableUUID(): Bytes {
+    let result = super.call("proxiableUUID", "proxiableUUID():(bytes32)", []);
+
+    return result[0].toBytes();
+  }
+
+  try_proxiableUUID(): ethereum.CallResult<Bytes> {
+    let result = super.tryCall(
+      "proxiableUUID",
+      "proxiableUUID():(bytes32)",
+      [],
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBytes());
+  }
+}
+
+export class ConstructorCall extends ethereum.Call {
+  get inputs(): ConstructorCall__Inputs {
+    return new ConstructorCall__Inputs(this);
+  }
+
+  get outputs(): ConstructorCall__Outputs {
+    return new ConstructorCall__Outputs(this);
+  }
+}
+
+export class ConstructorCall__Inputs {
+  _call: ConstructorCall;
+
+  constructor(call: ConstructorCall) {
+    this._call = call;
+  }
+}
+
+export class ConstructorCall__Outputs {
+  _call: ConstructorCall;
+
+  constructor(call: ConstructorCall) {
+    this._call = call;
+  }
+}
+
+export class InitializeCall extends ethereum.Call {
+  get inputs(): InitializeCall__Inputs {
+    return new InitializeCall__Inputs(this);
+  }
+
+  get outputs(): InitializeCall__Outputs {
+    return new InitializeCall__Outputs(this);
+  }
+}
+
+export class InitializeCall__Inputs {
+  _call: InitializeCall;
+
+  constructor(call: InitializeCall) {
+    this._call = call;
+  }
+
+  get identityRegistry_(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+}
+
+export class InitializeCall__Outputs {
+  _call: InitializeCall;
+
+  constructor(call: InitializeCall) {
+    this._call = call;
+  }
+}
+
+export class RenounceOwnershipCall extends ethereum.Call {
+  get inputs(): RenounceOwnershipCall__Inputs {
+    return new RenounceOwnershipCall__Inputs(this);
+  }
+
+  get outputs(): RenounceOwnershipCall__Outputs {
+    return new RenounceOwnershipCall__Outputs(this);
+  }
+}
+
+export class RenounceOwnershipCall__Inputs {
+  _call: RenounceOwnershipCall;
+
+  constructor(call: RenounceOwnershipCall) {
+    this._call = call;
+  }
+}
+
+export class RenounceOwnershipCall__Outputs {
+  _call: RenounceOwnershipCall;
+
+  constructor(call: RenounceOwnershipCall) {
+    this._call = call;
+  }
+}
+
+export class TransferOwnershipCall extends ethereum.Call {
+  get inputs(): TransferOwnershipCall__Inputs {
+    return new TransferOwnershipCall__Inputs(this);
+  }
+
+  get outputs(): TransferOwnershipCall__Outputs {
+    return new TransferOwnershipCall__Outputs(this);
+  }
+}
+
+export class TransferOwnershipCall__Inputs {
+  _call: TransferOwnershipCall;
+
+  constructor(call: TransferOwnershipCall) {
+    this._call = call;
+  }
+
+  get newOwner(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+}
+
+export class TransferOwnershipCall__Outputs {
+  _call: TransferOwnershipCall;
+
+  constructor(call: TransferOwnershipCall) {
+    this._call = call;
+  }
+}
+
+export class UpgradeToAndCallCall extends ethereum.Call {
+  get inputs(): UpgradeToAndCallCall__Inputs {
+    return new UpgradeToAndCallCall__Inputs(this);
+  }
+
+  get outputs(): UpgradeToAndCallCall__Outputs {
+    return new UpgradeToAndCallCall__Outputs(this);
+  }
+}
+
+export class UpgradeToAndCallCall__Inputs {
+  _call: UpgradeToAndCallCall;
+
+  constructor(call: UpgradeToAndCallCall) {
+    this._call = call;
+  }
+
+  get newImplementation(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+
+  get data(): Bytes {
+    return this._call.inputValues[1].value.toBytes();
+  }
+}
+
+export class UpgradeToAndCallCall__Outputs {
+  _call: UpgradeToAndCallCall;
+
+  constructor(call: UpgradeToAndCallCall) {
+    this._call = call;
   }
 }
 
@@ -136,7 +641,7 @@ export class ValidationRequestCall__Inputs {
     return this._call.inputValues[1].value.toBigInt();
   }
 
-  get requestUri(): string {
+  get requestURI(): string {
     return this._call.inputValues[2].value.toString();
   }
 
@@ -178,7 +683,7 @@ export class ValidationResponseCall__Inputs {
     return this._call.inputValues[1].value.toI32();
   }
 
-  get responseUri(): string {
+  get responseURI(): string {
     return this._call.inputValues[2].value.toString();
   }
 
@@ -186,8 +691,8 @@ export class ValidationResponseCall__Inputs {
     return this._call.inputValues[3].value.toBytes();
   }
 
-  get tag(): Bytes {
-    return this._call.inputValues[4].value.toBytes();
+  get tag(): string {
+    return this._call.inputValues[4].value.toString();
   }
 }
 

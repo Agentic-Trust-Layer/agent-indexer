@@ -10,31 +10,38 @@ dataSources:
     name: ERC721
     network: sepolia
     source:
-      address: "0x8004a6090Cd10A7288092483047B097295Fb8847"
+      address: "0x8004A818BFB912233c491871b3d84c89A494BD9e"
       abi: ERC721
-      startBlock: 9419801
+      startBlock: 9874718
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.9
       language: wasm/assemblyscript
       entities:
         - Collection
-        - Token
+        - Agent
         - Account
-        - Transfer
-        - UriUpdate
-        - TokenMetadata
+        - AgentTransfer
+        - AgentURIUpdate
+        - AgentMetadata
+        - AgentRegistrationFile
+        - AgentStats
+        - GlobalStats
+        - Tag
+        - AgentTag
       abis:
         - name: ERC721
           file: ./abis/ERC721.json
       eventHandlers:
+        - event: Registered(indexed uint256,string,indexed address)
+          handler: handleRegistered
         - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handleTransfer
         - event: Approval(indexed address,indexed address,indexed uint256)
           handler: handleApproval        # optional
         - event: ApprovalForAll(indexed address,indexed address,bool)
           handler: handleApprovalForAll  # optional
-        - event: UriUpdated(indexed uint256,string,indexed address)
+        - event: URIUpdated(indexed uint256,string,indexed address)
           handler: handleUriUpdated
         - event: MetadataSet(indexed uint256,indexed string,string,bytes)
           handler: handleMetadataSet
@@ -43,9 +50,9 @@ dataSources:
     name: ReputationRegistry
     network: sepolia
     source:
-      address: "0x8004B8FD1A363aa02fDC07635C0c5F94f6Af5B7E"
+      address: "0x8004B663056A597Dffe9eCcC1965A193B7388713"
       abi: ReputationRegistry
-      startBlock: 9419801
+      startBlock: 9874718
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.9
@@ -54,11 +61,16 @@ dataSources:
         - RepFeedback
         - RepFeedbackRevoked
         - RepResponseAppended
+        - FeedbackFile
+        - AgentStats
+        - GlobalStats
+        - Tag
+        - AgentTag
       abis:
         - name: ReputationRegistry
           file: ./abis/ReputationRegistry.json
       eventHandlers:
-        - event: NewFeedback(indexed uint256,indexed address,uint8,indexed bytes32,bytes32,string,bytes32)
+        - event: NewFeedback(indexed uint256,indexed address,uint64,uint8,indexed string,string,string,string,bytes32)
           handler: handleNewFeedback
         - event: FeedbackRevoked(indexed uint256,indexed address,indexed uint64)
           handler: handleFeedbackRevoked
@@ -71,7 +83,7 @@ dataSources:
     source:
       address: "0x8004CB39f29c09145F24Ad9dDe2A108C1A2cdfC5"
       abi: ValidationRegistry
-      startBlock: 9419801
+      startBlock: 9874718
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.9
@@ -79,22 +91,27 @@ dataSources:
       entities:
         - ValidationRequest
         - ValidationResponse
+        - ValidationFile
+        - AgentStats
+        - GlobalStats
+        - Tag
+        - AgentTag
       abis:
         - name: ValidationRegistry
           file: ./abis/ValidationRegistry.json
       eventHandlers:
         - event: ValidationRequest(indexed address,indexed uint256,string,indexed bytes32)
           handler: handleValidationRequest
-        - event: ValidationResponse(indexed address,indexed uint256,indexed bytes32,uint8,string,bytes32,bytes32)
+        - event: ValidationResponse(indexed address,indexed uint256,indexed bytes32,uint8,string,bytes32,string)
           handler: handleValidationResponse
       file: ./src/validation-registry.ts
   - kind: ethereum
     name: AssociationsStore
     network: sepolia
     source:
-      address: "0xe6Aa291353A8Aa7Ee9cfe89787981CcF4F47Fc3f"
+      address: "0xaF7428906D31918dDA2986D1405E2Ded06561E59"
       abi: AssociationsStore
-      startBlock: 0
+      startBlock: 9874718
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.9

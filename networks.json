@@ -1,7 +1,7 @@
 {
   "sepolia": {
     "ERC721": {
-      "address": "0x8004a6090Cd10A7288092483047B097295Fb8847",
+      "address": "0x8004A818BFB912233c491871b3d84c89A494BD9e",
       "startBlock": 9419801
     },
     "ReputationRegistry": {

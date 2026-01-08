@@ -5,31 +5,36 @@ type Collection @entity(immutable: false) {
   totalSupply: BigInt!
 }
 
-type Token @entity(immutable: false) {
-  id: Int8!               # tokenId as integer
+type Agent @entity(immutable: false) {
+  id: ID!                 # agentId as string (uint256)
   collection: Collection!
   owner: Account!
   mintedAt: BigInt!
-  uri: String
+
+  agentURI: String
   metadataJson: String
-  agentName: String
-  a2aEndpoint: String
-  chatEndpoint: String
-  ensName: String
-  agentAccount: String
+
+  name: String
   description: String
   image: String
+  ensName: String
+  agentWallet: Bytes
+  a2aEndpoint: String
+  chatEndpoint: String
+
+  registration: AgentRegistrationFile
+  stats: AgentStats
 }
 
 type Account @entity(immutable: false) {
   id: Bytes!              # owner address
   balance: BigInt!
-  tokens: [Token!] @derivedFrom(field: "owner")
+  agents: [Agent!] @derivedFrom(field: "owner")
 }
 
-type Transfer @entity(immutable: true) {
+type AgentTransfer @entity(immutable: true) {
   id: ID!                 # txHash-logIndex
-  token: Token!
+  agent: Agent!
   from: Account!
   to: Account!
   txHash: Bytes!
@@ -37,20 +42,20 @@ type Transfer @entity(immutable: true) {
   timestamp: BigInt!
 }
 
-type UriUpdate @entity(immutable: true) {
+type AgentURIUpdate @entity(immutable: true) {
   id: ID!                 # txHash-logIndex
-  token: Token!
-  newUri: String
-  newUriJson: String
+  agent: Agent!
+  newAgentURI: String
+  newAgentURIJson: String
   updatedBy: Bytes!
   txHash: Bytes!
   blockNumber: BigInt!
   timestamp: BigInt!
 }
 
-type TokenMetadata @entity(immutable: false) {
-  id: ID!                 # tokenId-key combination
-  token: Token!
+type AgentMetadata @entity(immutable: false) {
+  id: ID!                 # agentId-key combination
+  agent: Agent!
   key: String!
   value: Bytes!
   indexedKey: String
@@ -63,11 +68,13 @@ type TokenMetadata @entity(immutable: false) {
 
 type RepFeedback @entity(immutable: true) {
   id: ID!                 # txHash-logIndex
-  agentId: BigInt!
+  agent: Agent!
   clientAddress: Bytes!
+  feedbackIndex: BigInt!
   score: Int!
-  tag1: Bytes!
-  tag2: Bytes!
+  tag1: String!
+  tag2: String!
+  endpoint: String
   feedbackUri: String
   feedbackJson: String
   feedbackType: String
@@ -79,11 +86,12 @@ type RepFeedback @entity(immutable: true) {
   txHash: Bytes!
   blockNumber: BigInt!
   timestamp: BigInt!
+  file: FeedbackFile
 }
 
 type RepFeedbackRevoked @entity(immutable: true) {
   id: ID!                 # txHash-logIndex
-  agentId: BigInt!
+  agent: Agent!
   clientAddress: Bytes!
   feedbackIndex: BigInt!
   txHash: Bytes!
@@ -93,7 +101,7 @@ type RepFeedbackRevoked @entity(immutable: true) {
 
 type RepResponseAppended @entity(immutable: true) {
   id: ID!                 # txHash-logIndex
-  agentId: BigInt!
+  agent: Agent!
   clientAddress: Bytes!
   feedbackIndex: BigInt!
   responder: Bytes!
@@ -108,28 +116,110 @@ type RepResponseAppended @entity(immutable: true) {
 type ValidationRequest @entity(immutable: true) {
   id: ID!                 # txHash-logIndex
   validatorAddress: Bytes!
-  agentId: BigInt!
+  agent: Agent!
   requestUri: String
   requestJson: String
   requestHash: Bytes!
   txHash: Bytes!
   blockNumber: BigInt!
   timestamp: BigInt!
+  file: ValidationFile
 }
 
 type ValidationResponse @entity(immutable: true) {
   id: ID!                 # txHash-logIndex
   validatorAddress: Bytes!
-  agentId: BigInt!
+  agent: Agent!
   requestHash: Bytes!
   response: Int!
   responseUri: String
   responseJson: String
   responseHash: Bytes!
-  tag: Bytes!
+  tag: String!
   txHash: Bytes!
   blockNumber: BigInt!
   timestamp: BigInt!
+  file: ValidationFile
+}
+
+# ----------------------------
+# Off-chain “file” entities + analytics (Agent0-style)
+# ----------------------------
+
+type AgentRegistrationFile @entity(immutable: false) {
+  id: ID!                 # agentId (string)
+  agent: Agent!
+  agentURI: String
+  raw: String
+  type: String
+  name: String
+  description: String
+  image: String
+  supportedTrust: [String!]!
+  a2aEndpoint: String
+  chatEndpoint: String
+  ensName: String
+  updatedAt: BigInt!
+}
+
+type FeedbackFile @entity(immutable: true) {
+  id: ID!                 # txHash:cidOrUri
+  agent: Agent!
+  clientAddress: Bytes!
+  feedbackIndex: BigInt!
+  uri: String
+  cid: String
+  raw: String
+  tag1: String
+  tag2: String
+  createdAt: BigInt!
+}
+
+type ValidationFile @entity(immutable: true) {
+  id: ID!                 # txHash:cidOrUri
+  agent: Agent!
+  validatorAddress: Bytes!
+  requestHash: Bytes!
+  requestUri: String
+  responseUri: String
+  cid: String
+  requestRaw: String
+  responseRaw: String
+  tag: String
+  createdAt: BigInt!
+}
+
+type Tag @entity(immutable: false) {
+  id: ID!                 # normalized tag string
+  count: BigInt!
+  updatedAt: BigInt!
+}
+
+type AgentTag @entity(immutable: false) {
+  id: ID!                 # agentId:tag
+  agent: Agent!
+  tag: Tag!
+  count: BigInt!
+  updatedAt: BigInt!
+}
+
+type AgentStats @entity(immutable: false) {
+  id: ID!                 # agentId (string)
+  agent: Agent!
+  totalFeedback: BigInt!
+  totalValidations: BigInt!
+  lastActivity: BigInt!
+  updatedAt: BigInt!
+  tags: [String!]!
+}
+
+type GlobalStats @entity(immutable: false) {
+  id: ID!                 # "global"
+  totalAgents: BigInt!
+  totalFeedback: BigInt!
+  totalValidations: BigInt!
+  tags: [String!]!
+  updatedAt: BigInt!
 }
 
 # ----------------------------
