@@ -70,7 +70,7 @@ dataSources:
         - name: ReputationRegistry
           file: ./abis/ReputationRegistry.json
       eventHandlers:
-        - event: NewFeedback(indexed uint256,indexed address,uint64,uint8,indexed string,string,string,string,bytes32)
+        - event: NewFeedback(indexed uint256,indexed address,uint64,uint8,indexed string,string,string,string,string,bytes32)
           handler: handleNewFeedback
         - event: FeedbackRevoked(indexed uint256,indexed address,indexed uint64)
           handler: handleFeedbackRevoked

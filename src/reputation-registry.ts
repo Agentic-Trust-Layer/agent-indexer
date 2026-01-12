@@ -133,8 +133,10 @@ export function handleNewFeedback(e: NewFeedbackEvent): void {
   entity.clientAddress = e.params.clientAddress;
   entity.feedbackIndex = e.params.feedbackIndex as BigInt;
   entity.score = e.params.score;
-  // tag1 is an indexed string, so it's exposed as bytes32(topic hash). Store the topic hex.
-  entity.tag1 = e.params.tag1.toHexString();
+  // indexedTag1 is indexed string => bytes32(topic hash)
+  entity.indexedTag1 = e.params.indexedTag1.toHexString();
+  // tag1 is non-indexed string (human-readable)
+  entity.tag1 = e.params.tag1;
   entity.tag2 = e.params.tag2;
   entity.endpoint = e.params.endpoint;
   entity.feedbackUri = e.params.feedbackURI;
@@ -146,7 +148,7 @@ export function handleNewFeedback(e: NewFeedbackEvent): void {
   const g = getOrCreateGlobalStats(e.block.timestamp);
   g.totalFeedback = g.totalFeedback.plus(BigInt.fromI32(1));
   g.save();
-  addTagToAgentAndGlobal(e.params.agentId, entity.tag1, e.block.timestamp);
+  addTagToAgentAndGlobal(e.params.agentId, e.params.tag1, e.block.timestamp);
   addTagToAgentAndGlobal(e.params.agentId, entity.tag2, e.block.timestamp);
 
   // If IPFS (ipfs:// or gateway), store raw JSON as string
@@ -167,6 +169,7 @@ export function handleNewFeedback(e: NewFeedbackEvent): void {
       ff.uri = furi;
       ff.cid = fpath;
       ff.raw = raw;
+      ff.indexedTag1 = entity.indexedTag1;
       ff.tag1 = entity.tag1;
       ff.tag2 = entity.tag2;
       ff.createdAt = e.block.timestamp;

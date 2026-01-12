@@ -72,6 +72,7 @@ type RepFeedback @entity(immutable: true) {
   clientAddress: Bytes!
   feedbackIndex: BigInt!
   score: Int!
+  indexedTag1: String
   tag1: String!
   tag2: String!
   endpoint: String
@@ -170,6 +171,7 @@ type FeedbackFile @entity(immutable: true) {
   uri: String
   cid: String
   raw: String
+  indexedTag1: String
   tag1: String
   tag2: String
   createdAt: BigInt!
