@@ -1,7 +1,8 @@
 import { BigInt, Bytes, crypto, ethereum } from "@graphprotocol/graph-ts";
 import {
   RevokeAssociationCall,
-  StoreAssociationCall
+  StoreAssociationCall,
+  UpdateAssociationSignaturesCall
 } from "../generated/AssociationsStore/AssociationsStore";
 import { Association, AssociationAccount, AssociationRevocation } from "../generated/schema";
 
@@ -111,6 +112,19 @@ export function handleRevokeAssociation(call: RevokeAssociationCall): void {
     assoc.lastUpdatedTimestamp = call.block.timestamp;
     assoc.save();
   }
+}
+
+export function handleUpdateAssociationSignatures(call: UpdateAssociationSignaturesCall): void {
+  const associationId = call.inputs.associationId;
+  const assoc = Association.load(associationId);
+  if (assoc == null) return;
+
+  assoc.initiatorSignature = call.inputs.initiatorSignature;
+  assoc.approverSignature = call.inputs.approverSignature;
+  assoc.lastUpdatedTxHash = call.transaction.hash;
+  assoc.lastUpdatedBlockNumber = call.block.number;
+  assoc.lastUpdatedTimestamp = call.block.timestamp;
+  assoc.save();
 }
 
 

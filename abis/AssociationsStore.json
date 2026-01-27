@@ -42,6 +42,17 @@
   },
   {
     "type": "function",
+    "name": "updateAssociationSignatures",
+    "stateMutability": "nonpayable",
+    "inputs": [
+      { "name": "associationId", "type": "bytes32" },
+      { "name": "initiatorSignature", "type": "bytes" },
+      { "name": "approverSignature", "type": "bytes" }
+    ],
+    "outputs": []
+  },
+  {
+    "type": "function",
     "name": "getAssociationsForAccount",
     "stateMutability": "view",
     "inputs": [{ "name": "account", "type": "bytes" }],
@@ -70,7 +81,64 @@
         ]
       }
     ]
+  },
+  {
+    "type": "function",
+    "name": "getAssociationIdsForAccount",
+    "stateMutability": "view",
+    "inputs": [{ "name": "account", "type": "bytes" }],
+    "outputs": [{ "name": "ids", "type": "bytes32[]" }]
+  },
+  {
+    "type": "function",
+    "name": "validateSignedAssociationRecord",
+    "stateMutability": "view",
+    "inputs": [
+      {
+        "name": "sar",
+        "type": "tuple",
+        "components": [
+          { "name": "revokedAt", "type": "uint40" },
+          { "name": "initiatorKeyType", "type": "bytes2" },
+          { "name": "approverKeyType", "type": "bytes2" },
+          { "name": "initiatorSignature", "type": "bytes" },
+          { "name": "approverSignature", "type": "bytes" },
+          {
+            "name": "record",
+            "type": "tuple",
+            "components": [
+              { "name": "initiator", "type": "bytes" },
+              { "name": "approver", "type": "bytes" },
+              { "name": "validAt", "type": "uint40" },
+              { "name": "validUntil", "type": "uint40" },
+              { "name": "interfaceId", "type": "bytes4" },
+              { "name": "data", "type": "bytes" }
+            ]
+          }
+        ]
+      }
+    ],
+    "outputs": [{ "name": "", "type": "bool" }]
+  },
+  {
+    "type": "function",
+    "name": "delegationManager",
+    "stateMutability": "view",
+    "inputs": [],
+    "outputs": [{ "name": "", "type": "address" }]
+  },
+  {
+    "type": "function",
+    "name": "scDelegationEnforcer",
+    "stateMutability": "view",
+    "inputs": [],
+    "outputs": [{ "name": "", "type": "address" }]
+  },
+  {
+    "type": "function",
+    "name": "scDelegationVerifier",
+    "stateMutability": "view",
+    "inputs": [],
+    "outputs": [{ "name": "", "type": "address" }]
   }
 ]
-
-

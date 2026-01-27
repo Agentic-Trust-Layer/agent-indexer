@@ -71,10 +71,11 @@ type RepFeedback @entity(immutable: true) {
   agent: Agent!
   clientAddress: Bytes!
   feedbackIndex: BigInt!
-  score: Int!
   indexedTag1: String
   tag1: String!
   tag2: String!
+  value: BigInt!
+  valueDecimals: Int!
   endpoint: String
   feedbackUri: String
   feedbackJson: String
@@ -174,6 +175,8 @@ type FeedbackFile @entity(immutable: true) {
   indexedTag1: String
   tag1: String
   tag2: String
+  value: BigInt
+  valueDecimals: Int
   createdAt: BigInt!
 }
 

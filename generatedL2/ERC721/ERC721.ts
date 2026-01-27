@@ -1280,6 +1280,36 @@ export class TransferOwnershipCall__Outputs {
   }
 }
 
+export class UnsetAgentWalletCall extends ethereum.Call {
+  get inputs(): UnsetAgentWalletCall__Inputs {
+    return new UnsetAgentWalletCall__Inputs(this);
+  }
+
+  get outputs(): UnsetAgentWalletCall__Outputs {
+    return new UnsetAgentWalletCall__Outputs(this);
+  }
+}
+
+export class UnsetAgentWalletCall__Inputs {
+  _call: UnsetAgentWalletCall;
+
+  constructor(call: UnsetAgentWalletCall) {
+    this._call = call;
+  }
+
+  get agentId(): BigInt {
+    return this._call.inputValues[0].value.toBigInt();
+  }
+}
+
+export class UnsetAgentWalletCall__Outputs {
+  _call: UnsetAgentWalletCall;
+
+  constructor(call: UnsetAgentWalletCall) {
+    this._call = call;
+  }
+}
+
 export class UpgradeToAndCallCall extends ethereum.Call {
   get inputs(): UpgradeToAndCallCall__Inputs {
     return new UpgradeToAndCallCall__Inputs(this);

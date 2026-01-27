@@ -132,12 +132,13 @@ export function handleNewFeedback(e: NewFeedbackEvent): void {
   entity.agent = e.params.agentId.toString();
   entity.clientAddress = e.params.clientAddress;
   entity.feedbackIndex = e.params.feedbackIndex as BigInt;
-  entity.score = e.params.score;
   // indexedTag1 is indexed string => bytes32(topic hash)
   entity.indexedTag1 = e.params.indexedTag1.toHexString();
   // tag1 is non-indexed string (human-readable)
   entity.tag1 = e.params.tag1;
   entity.tag2 = e.params.tag2;
+  entity.value = e.params.value;
+  entity.valueDecimals = e.params.valueDecimals;
   entity.endpoint = e.params.endpoint;
   entity.feedbackUri = e.params.feedbackURI;
 
@@ -172,6 +173,8 @@ export function handleNewFeedback(e: NewFeedbackEvent): void {
       ff.indexedTag1 = entity.indexedTag1;
       ff.tag1 = entity.tag1;
       ff.tag2 = entity.tag2;
+      ff.value = entity.value;
+      ff.valueDecimals = entity.valueDecimals;
       ff.createdAt = e.block.timestamp;
       ff.save();
       entity.file = ff.id;
