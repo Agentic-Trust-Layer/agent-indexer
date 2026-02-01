@@ -43,7 +43,7 @@ dataSources:
           handler: handleApprovalForAll
         - event: URIUpdated(indexed uint256,string,indexed address)
           handler: handleUriUpdated
-        - event: MetadataSet(uint256,indexed string,string,bytes)
+        - event: MetadataSet(indexed uint256,indexed string,string,bytes)
           handler: handleMetadataSet
       file: ./src/erc-721.ts
   - kind: ethereum
