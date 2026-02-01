@@ -1,0 +1,30 @@
+type Schema @entity(immutable: true) {
+  id: ID!                  # schema UID (bytes32 hex)
+  uid: Bytes!
+  registrant: Bytes!
+  revocable: Boolean!
+  schema: String!          # schema string
+  createdAt: BigInt!
+  txHash: Bytes!
+  blockNumber: BigInt!
+  timestamp: BigInt!
+}
+
+type Attestation @entity(immutable: false) {
+  id: ID!                  # attestation UID (bytes32 hex)
+  uid: Bytes!
+  schema: Bytes!
+  recipient: Bytes!
+  attester: Bytes!
+  time: BigInt!
+  expirationTime: BigInt!
+  refUID: Bytes
+  data: Bytes!
+  revocable: Boolean!
+  revoked: Boolean!
+  revocationTime: BigInt
+  txHash: Bytes!
+  blockNumber: BigInt!
+  timestamp: BigInt!
+}
+
