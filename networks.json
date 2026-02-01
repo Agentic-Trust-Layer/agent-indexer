@@ -1,13 +1,15 @@
 {
   "sepolia": {
-    "ERC721": {
-      "address": "0x8004A818BFB912233c491871b3d84c89A494BD9e",
-      "startBlock": 9419801
-    },
-    "ReputationRegistry": {
-      "address": "0x8004B8FD1A363aa02fDC07635C0c5F94f6Af5B7E",
-      "startBlock": 9419801
-    }
+    "ERC721": { "address": "0x8004A818BFB912233c491871b3d84c89A494BD9e", "startBlock": 9874718 },
+    "ReputationRegistry": { "address": "0x8004B663056A597Dffe9eCcC1965A193B7388713", "startBlock": 9874718 },
+    "ValidationRegistry": { "address": "0x8004Cb1BF31DAf7788923b405b754f57acEB4272", "startBlock": 9874718 },
+    "AssociationsStore": { "address": "0xaF7428906D31918dDA2986D1405E2Ded06561E59", "startBlock": 9874718 }
+  },
+  "mainnet": {
+    "ERC721": { "address": "0x8004A169FB4a3325136EB29fA0ceB6D2e539a432", "startBlock": 24339900 },
+    "ReputationRegistry": { "address": "0x8004BAa17C55a88189AE136b182e5fdA19dE9b63", "startBlock": 24339900 },
+    "ValidationRegistry": { "address": "0x8004Cb1BF31DAf7788923b405b754f57acEB4272", "startBlock": 24339900 },
+    "AssociationsStore": { "address": "0xaF7428906D31918dDA2986D1405E2Ded06561E59", "startBlock": 24339900 }
   },
   "base-sepolia": {
     "ERC721": {

@@ -1,0 +1,134 @@
+specVersion: 1.3.0
+features:
+  - ipfsOnEthereumContracts
+indexerHints:
+  prune: auto
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: ERC721
+    network: mainnet
+    source:
+      address: "0x8004A169FB4a3325136EB29fA0ceB6D2e539a432"
+      abi: ERC721
+      startBlock: 24339900
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.9
+      language: wasm/assemblyscript
+      entities:
+        - Collection
+        - Agent
+        - Account
+        - AgentTransfer
+        - AgentURIUpdate
+        - AgentMetadata
+        - AgentRegistrationFile
+        - AgentStats
+        - GlobalStats
+        - Tag
+        - AgentTag
+      abis:
+        - name: ERC721
+          file: ./abis/ERC721.json
+      eventHandlers:
+        - event: Registered(indexed uint256,string,indexed address)
+          handler: handleRegistered
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+        - event: Approval(indexed address,indexed address,indexed uint256)
+          handler: handleApproval
+        - event: ApprovalForAll(indexed address,indexed address,bool)
+          handler: handleApprovalForAll
+        - event: URIUpdated(indexed uint256,string,indexed address)
+          handler: handleUriUpdated
+        - event: MetadataSet(uint256,indexed string,string,bytes)
+          handler: handleMetadataSet
+      file: ./src/erc-721.ts
+  - kind: ethereum
+    name: ReputationRegistry
+    network: mainnet
+    source:
+      address: "0x8004BAa17C55a88189AE136b182e5fdA19dE9b63"
+      abi: ReputationRegistry
+      startBlock: 24339900
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.9
+      language: wasm/assemblyscript
+      entities:
+        - RepFeedback
+        - RepFeedbackRevoked
+        - RepResponseAppended
+        - FeedbackFile
+        - AgentStats
+        - GlobalStats
+        - Tag
+        - AgentTag
+      abis:
+        - name: ReputationRegistry
+          file: ./abis/ReputationRegistry.json
+      eventHandlers:
+        - event: NewFeedback(indexed uint256,indexed address,uint64,int128,uint8,indexed string,string,string,string,string,bytes32)
+          handler: handleNewFeedback
+        - event: FeedbackRevoked(indexed uint256,indexed address,indexed uint64)
+          handler: handleFeedbackRevoked
+        - event: ResponseAppended(indexed uint256,indexed address,uint64,indexed address,string,bytes32)
+          handler: handleResponseAppended
+      file: ./src/reputation-registry.ts
+  - kind: ethereum
+    name: ValidationRegistry
+    network: mainnet
+    source:
+      address: "0x8004Cb1BF31DAf7788923b405b754f57acEB4272"
+      abi: ValidationRegistry
+      startBlock: 24339900
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.9
+      language: wasm/assemblyscript
+      entities:
+        - ValidationRequest
+        - ValidationResponse
+        - ValidationFile
+        - AgentStats
+        - GlobalStats
+        - Tag
+        - AgentTag
+      abis:
+        - name: ValidationRegistry
+          file: ./abis/ValidationRegistry.json
+      eventHandlers:
+        - event: ValidationRequest(indexed address,indexed uint256,string,indexed bytes32)
+          handler: handleValidationRequest
+        - event: ValidationResponse(indexed address,indexed uint256,indexed bytes32,uint8,string,bytes32,string)
+          handler: handleValidationResponse
+      file: ./src/validation-registry.ts
+  - kind: ethereum
+    name: AssociationsStore
+    network: mainnet
+    source:
+      address: "0xaF7428906D31918dDA2986D1405E2Ded06561E59"
+      abi: AssociationsStore
+      startBlock: 24339900
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.9
+      language: wasm/assemblyscript
+      entities:
+        - Association
+        - AssociationAccount
+        - AssociationRevocation
+      abis:
+        - name: AssociationsStore
+          file: ./abis/AssociationsStore.json
+      callHandlers:
+        - function: storeAssociation((uint40,bytes2,bytes2,bytes,bytes,(bytes,bytes,uint40,uint40,bytes4,bytes)))
+          handler: handleStoreAssociation
+        - function: updateAssociationSignatures(bytes32,bytes,bytes)
+          handler: handleUpdateAssociationSignatures
+        - function: revokeAssociation(bytes32,uint40)
+          handler: handleRevokeAssociation
+      file: ./src/associations-store.ts
+

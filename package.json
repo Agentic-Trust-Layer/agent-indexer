@@ -4,6 +4,12 @@
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
+    "render:mainnet": "node scripts/render-subgraph.cjs mainnet",
+    "render:sepolia": "node scripts/render-subgraph.cjs sepolia",
+    "codegen:mainnet": "node scripts/render-subgraph.cjs mainnet && graph codegen subgraph.mainnet.yaml",
+    "build:mainnet": "node scripts/render-subgraph.cjs mainnet && graph build subgraph.mainnet.yaml",
+    "codegen:sepolia": "node scripts/render-subgraph.cjs sepolia && graph codegen subgraph.sepolia.yaml",
+    "build:sepolia": "node scripts/render-subgraph.cjs sepolia && graph build subgraph.sepolia.yaml",
     "codegen:base": "graph codegen subgraph.base-sepolia.yaml",
     "build:base": "graph build subgraph.base-sepolia.yaml",
     "codegen:l2": "graph codegen --output-dir ./generatedL2 subgraphL2.yaml",
