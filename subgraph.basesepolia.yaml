@@ -45,10 +45,41 @@ dataSources:
           handler: handleMetadataSet
       file: ./src/erc-721-l2.ts
   - kind: ethereum
+    name: ReputationRegistry
+    network: base-sepolia
+    source:
+      address: "0x8004B663056A597Dffe9eCcC1965A193B7388713"
+      abi: ReputationRegistry
+      startBlock: 32130886
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.9
+      language: wasm/assemblyscript
+      entities:
+        - RepFeedback
+        - RepFeedbackRevoked
+        - RepResponseAppended
+        - FeedbackFile
+        - AgentStats
+        - GlobalStats
+        - Tag
+        - AgentTag
+      abis:
+        - name: ReputationRegistry
+          file: ./abis/ReputationRegistry.json
+      eventHandlers:
+        - event: NewFeedback(indexed uint256,indexed address,uint64,int128,uint8,indexed string,string,string,string,string,bytes32)
+          handler: handleNewFeedback
+        - event: FeedbackRevoked(indexed uint256,indexed address,indexed uint64)
+          handler: handleFeedbackRevoked
+        - event: ResponseAppended(indexed uint256,indexed address,uint64,indexed address,string,bytes32)
+          handler: handleResponseAppended
+      file: ./src/reputation-registry.ts
+  - kind: ethereum
     name: ValidationRegistry
     network: base-sepolia
     source:
-      address: "0x8004Cb1BF31DAf7788923b405b754f57acEB4272" 
+      address: "0x8004Cb1BF31DAf7788923b405b754f57acEB4272"
       abi: ValidationRegistry
       startBlock: 32130886
     mapping:

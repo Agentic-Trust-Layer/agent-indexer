@@ -1,6 +1,10 @@
 # Graph CLI generated artifacts
 build/
 generated/
+buildBaseSepolia/
+generatedBaseSepolia/
+buildBaseMainnet/
+generatedBaseMainnet/
 
 # Dependency directories
 node_modules/

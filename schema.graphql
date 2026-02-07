@@ -228,6 +228,84 @@ type GlobalStats @entity(immutable: false) {
 }
 
 # ----------------------------
+# ERC-8122 AgentRegistry (ERC-6909 + ERC-8048/8049)
+# ----------------------------
+
+type RegistryAgent8122 @entity(immutable: false) {
+  id: ID!                 # registryAddress-agentId
+  registry: Bytes!
+  agentId: BigInt!
+  owner: Bytes!
+  endpointType: String
+  endpoint: String
+  agentAccount: Bytes
+  createdAt: BigInt!
+  updatedAt: BigInt!
+}
+
+type RegistryAgent8122Transfer @entity(immutable: true) {
+  id: ID!                 # txHash-logIndex
+  registry: Bytes!
+  operator: Bytes!
+  from: Bytes!
+  to: Bytes!
+  agentId: BigInt!
+  amount: BigInt!
+  txHash: Bytes!
+  blockNumber: BigInt!
+  timestamp: BigInt!
+}
+
+type RegistryAgent8122Approval @entity(immutable: true) {
+  id: ID!                 # txHash-logIndex
+  registry: Bytes!
+  owner: Bytes!
+  spender: Bytes!
+  agentId: BigInt!
+  amount: BigInt!
+  txHash: Bytes!
+  blockNumber: BigInt!
+  timestamp: BigInt!
+}
+
+type RegistryAgent8122Operator @entity(immutable: false) {
+  id: ID!                 # registryAddress-owner-operator
+  registry: Bytes!
+  owner: Bytes!
+  operator: Bytes!
+  approved: Boolean!
+  updatedAt: BigInt!
+  txHash: Bytes!
+  blockNumber: BigInt!
+  timestamp: BigInt!
+}
+
+type RegistryAgent8122Metadata @entity(immutable: false) {
+  id: ID!                 # registryAddress-agentId-key
+  registry: Bytes!
+  agentId: BigInt!
+  key: String!
+  value: Bytes!
+  indexedKey: String
+  setAt: BigInt!
+  txHash: Bytes!
+  blockNumber: BigInt!
+  timestamp: BigInt!
+}
+
+type RegistryContractMetadata @entity(immutable: false) {
+  id: ID!                 # registryAddress-key
+  registry: Bytes!
+  key: String!
+  value: Bytes!
+  indexedKey: String
+  updatedAt: BigInt!
+  txHash: Bytes!
+  blockNumber: BigInt!
+  timestamp: BigInt!
+}
+
+# ----------------------------
 # ERC-8092 Associations Store
 # ----------------------------
 
