@@ -1,0 +1,13 @@
+[
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "internalType": "address", "name": "registry", "type": "address" },
+      { "indexed": true, "internalType": "address", "name": "admin", "type": "address" },
+      { "indexed": false, "internalType": "bytes32", "name": "salt", "type": "bytes32" }
+    ],
+    "name": "RegistryDeployed",
+    "type": "event"
+  }
+]
+

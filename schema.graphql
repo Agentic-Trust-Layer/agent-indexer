@@ -305,6 +305,17 @@ type RegistryContractMetadata @entity(immutable: false) {
   timestamp: BigInt!
 }
 
+type RegistryAgent8122Deployment @entity(immutable: true) {
+  id: ID!                 # registry address
+  factory: Bytes!
+  admin: Bytes!
+  salt: Bytes!
+  deployedAt: BigInt!
+  txHash: Bytes!
+  blockNumber: BigInt!
+  timestamp: BigInt!
+}
+
 # ----------------------------
 # ERC-8092 Associations Store
 # ----------------------------

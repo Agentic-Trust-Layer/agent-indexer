@@ -137,9 +137,65 @@ dataSources:
     name: AgentRegistry8122
     network: sepolia
     source:
-      address: "0x2c0fd6ad4081fe35775165d137420b6a0d5c170c"
+      address: "0x7AB7A16B64BBbC2d680ACc5D2770BfD10b551274"
       abi: AgentRegistry8122
       startBlock: 10203072
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.9
+      language: wasm/assemblyscript
+      entities:
+        - RegistryAgent8122
+        - RegistryAgent8122Metadata
+        - RegistryAgent8122Transfer
+        - RegistryAgent8122Operator
+        - RegistryAgent8122Approval
+        - RegistryContractMetadata
+      abis:
+        - name: AgentRegistry8122
+          file: ./abis/AgentRegistry8122.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,indexed address,indexed uint256,uint256)
+          handler: handleRegistryTransfer
+        - event: Approval(indexed address,indexed address,indexed uint256,uint256)
+          handler: handleRegistryApproval
+        - event: OperatorSet(indexed address,indexed address,bool)
+          handler: handleRegistryOperatorSet
+        - event: Registered(indexed uint256,indexed address,string,string,address)
+          handler: handleRegistryRegistered
+        - event: MetadataSet(indexed uint256,indexed string,string,bytes)
+          handler: handleRegistryMetadataSet
+        - event: ContractMetadataUpdated(indexed string,string,bytes)
+          handler: handleRegistryContractMetadataUpdated
+      file: ./src/agent-registry-8122.ts
+
+  - kind: ethereum
+    name: AgentRegistryFactory8122
+    network: sepolia
+    source:
+      address: "0xEdd20967A704c2B2065B7adF41c8cA0d6bec01b3"
+      abi: AgentRegistryFactory8122
+      startBlock: 10203072
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.9
+      language: wasm/assemblyscript
+      entities:
+        - RegistryAgent8122Deployment
+      abis:
+        - name: AgentRegistryFactory8122
+          file: ./abis/AgentRegistryFactory8122.json
+      eventHandlers:
+        - event: RegistryDeployed(indexed address,indexed address,bytes32)
+          handler: handleRegistryDeployed
+      file: ./src/agent-registry-factory-8122.ts
+
+templates:
+  - kind: ethereum
+    name: AgentRegistry8122Template
+    network: sepolia
+    source:
+      abi: AgentRegistry8122
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.9

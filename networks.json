@@ -4,7 +4,8 @@
     "ReputationRegistry": { "address": "0x8004B663056A597Dffe9eCcC1965A193B7388713", "startBlock": 10203072 },
     "ValidationRegistry": { "address": "0x8004Cb1BF31DAf7788923b405b754f57acEB4272", "startBlock": 10203072 },
     "AssociationsStore": { "address": "0xaF7428906D31918dDA2986D1405E2Ded06561E59", "startBlock": 10203072 },
-    "AgentRegistry8122": { "address": "0x2c0fd6ad4081fe35775165d137420b6a0d5c170c", "startBlock": 10203072 }
+    "AgentRegistry8122": { "address": "0x7AB7A16B64BBbC2d680ACc5D2770BfD10b551274", "startBlock": 10203072 },
+    "AgentRegistry8122Factory": { "address": "0xEdd20967A704c2B2065B7adF41c8cA0d6bec01b3", "startBlock": 10203072 }
   },
   "mainnet": {
     "ERC721": { "address": "0x8004A169FB4a3325136EB29fA0ceB6D2e539a432", "startBlock": 24339900 },
