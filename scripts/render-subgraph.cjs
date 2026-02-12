@@ -30,6 +30,46 @@ function has(obj, keyPath) {
   return true;
 }
 
+function removeDataSourceByName(manifest, name) {
+  const lines = String(manifest || "").split("\n");
+  const want = `    name: ${name}`;
+  let start = -1;
+  for (let i = 0; i < lines.length; i++) {
+    if (!lines[i].startsWith("  - kind: ethereum")) continue;
+    let ok = false;
+    for (let j = i + 1; j < Math.min(lines.length, i + 10); j++) {
+      if (lines[j] === want) {
+        ok = true;
+        break;
+      }
+      if (lines[j].startsWith("  - kind: ethereum")) break;
+    }
+    if (ok) {
+      start = i;
+      break;
+    }
+  }
+  if (start < 0) return manifest;
+
+  let end = lines.length;
+  for (let i = start + 1; i < lines.length; i++) {
+    if (lines[i].startsWith("  - kind: ethereum")) {
+      end = i;
+      break;
+    }
+    // stop before top-level sections like templates:
+    if (/^[A-Za-z]/.test(lines[i])) {
+      end = i;
+      break;
+    }
+  }
+
+  lines.splice(start, end - start);
+  // remove extra blank lines
+  while (lines.length > 0 && lines[lines.length - 1] === "") lines.pop();
+  return lines.join("\n") + "\n";
+}
+
 function main() {
   const repoRoot = path.join(__dirname, "..");
   const network = process.argv[2];
@@ -59,6 +99,12 @@ function main() {
 
   const out = renderTemplate(tmpl, vars);
   let finalOut = out;
+
+  const disableTraces = Boolean(networks?.[network]?.disableTraces);
+  if (disableTraces) {
+    // Call handlers require trace APIs. Many Linea RPCs disable tracing; remove the call-based datasource.
+    finalOut = removeDataSourceByName(finalOut, "AssociationsStore");
+  }
 
   // Optional ERC-8122 AgentRegistry (only added when configured for this network)
   if (has(networks, `${network}.AgentRegistry8122.address`)) {
